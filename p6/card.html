@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 14px;
+        }
+        .card{
+            text-align: center;
+            border: 1px solid black;
+        }
+        nav{
+            align-items: center;
+            max-width: 1500px;
+            height: 70px;
+            display: flex;
+            justify-content: space-around;
+            background-color: blanchedalmond;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="./index.html">Home</a>
+        <a href="./card.html">Cart</a>
+    </nav>
+    <div id="container">
+
+    </div>
+</body>
+</html>
+<script>
+    
+    let data=JSON.parse(localStorage.getItem("cartdata"))||[]
+   
+    console.log(data)
+    data.forEach(function(el){
+        console.log(el.name)
+        let div=document.createElement("div")
+        div.className="card"
+        let p=document.createElement("p")
+        let p1=document.createElement("p")
+        let p2=document.createElement("p")
+        p.innerText=el.name
+        p1.innerText=el.email
+        p2.innerText=el.username;
+        div.append(p,p1,p2)
+        document.getElementById("container").append(div)
+    })
+</script>

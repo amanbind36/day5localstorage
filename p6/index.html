@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 14px;
+        }
+        .card{
+            text-align: center;
+            border: 1px solid black;
+        }
+        nav{
+            align-items: center;
+            max-width: 1500px;
+            height: 70px;
+            display: flex;
+            justify-content: space-around;
+            background-color: blanchedalmond;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#">Home</a>
+        <a href="./card.html">Cart</a>
+    </nav>
+    <div id="container">
+
+    </div>
+</body>
+</html>
+<script>
+    let user = [
+  {
+    id: 1,
+    name: "Leanne Graham",
+    username: "Bret",
+    email: "Sincere@april.biz",
+  },
+  {
+    id: 2,
+    name: "Ervin Howell",
+    username: "Antonette",
+    email: "Shanna@melissa.tv",
+  },
+  {
+    id: 3,
+    name: "Clementine Bauch",
+    username: "Samantha",
+    email: "Nathan@yesenia.net",
+  },
+  {
+    id: 4,
+    name: "Patricia Lebsack",
+    username: "Karianne",
+    email: "Julianne.OConner@kory.org",
+  },
+  {
+    id: 5,
+    name: "Chelsey Dietrich",
+    username: "Kamren",
+    email: "Lucio_Hettinger@annie.ca",
+  },
+  {
+    id: 6,
+    name: "Mrs. Dennis Schulist",
+    username: "Leopoldo_Corkery",
+    email: "Karley_Dach@jasper.info",
+  },
+  {
+    id: 7,
+    name: "Kurtis Weissnat",
+    username: "Elwyn.Skiles",
+    email: "Telly.Hoeger@billy.biz",
+  },
+  {
+    id: 8,
+    name: "Nicholas Runolfsdottir V",
+    username: "Maxime_Nienow",
+    email: "Sherwood@rosamond.me",
+  },
+  {
+    id: 9,
+    name: "Glenna Reichert",
+    username: "Delphine",
+    email: "Chaim_McDermott@dana.io",
+  },
+  {
+    id: 10,
+    name: "Clementina DuBuque",
+    username: "Moriah.Stanton",
+    email: "Rey.Padberg@karina.biz",
+  },
+];
+let obj=[]
+ 
+let cont=document.getElementById("container")
+function display(){
+    user.forEach(function(el){
+        
+        let div=document.createElement("div")
+        div.className="card"
+      
+        let p1=document.createElement("p")
+        let p2=document.createElement("p")
+        let p3=document.createElement("p")
+        let btn=document.createElement("button")
+        btn.innerText="Add to Cart"
+        btn.addEventListener("click",function(){
+            addtolocal(el)
+        })
+        p1.innerText=el.name;
+        p2.innerText=el.username;
+        p3.innerText=el.email;
+        div.append(p1,p2,p3,btn)
+        
+        cont.append(div)
+    })
+     
+}
+
+console.log(obj)
+function addtolocal(data){
+    
+   
+    obj.push(data )
+    localStorage.setItem("cartdata",JSON.stringify(obj))
+}
+display()
+
+</script>
