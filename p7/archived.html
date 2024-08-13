@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .restore-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        </style>
+</head>
+<body>
+    <nav>
+        <a href="./index.html">Home</a>
+        <a href="./archived.html">Archive</a>
+    </nav>
+    <div id="container">
+        <table border="1px">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Delete</th>
+                    <th>Restore</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+</html>
+<script>
+    
+  let tbody=document.getElementById("tbody")
+  function addtodo(){
+
+    tbody.innerHTML=""
+    let todos = JSON.parse(localStorage.getItem("todo"))||[]
+ 
+    todos.forEach(function(el,index){
+        let tr=document.createElement("tr")
+    let td1=document.createElement("td")
+
+    let td2=document.createElement("td")
+    let td3=document.createElement("td")
+    let td4=document.createElement("td")
+    let td5=document.createElement("td")
+    let btn1=document.createElement("button")
+    btn1.innerText = el.status === 'completed' ? 'Completed' : 'Progress';
+    btn1.addEventListener('click', function() {
+            if (btn1.innerText === 'Progress') {
+                btn1.innerText = 'Completed';
+                el.status = 'completed'; 
+            } else {
+                btn1.innerText = 'Progress';
+                el.status = 'progress';
+            }
+        });
+    let btn2=document.createElement("button")
+    btn2.innerText="completed"
+    let btn3=document.createElement("button")
+    btn3.innerText="Delete"
+    let btn4=document.createElement("button")
+    btn4.innerText="Restore"
+    btn4.addEventListener('click', function() {
+            if (btn1.innerText === 'Progress') {
+                btn1.innerText = 'Completed';
+                el.status = 'completed'; 
+            } else {
+                btn1.innerText = 'Progress';
+                el.status = 'progress';
+            }
+        });
+    td5.append(btn4)
+
+    btn3.addEventListener("click",function(){
+        deletetodo(index)
+    })
+    td1.innerText=el.name;
+    td2.innerText=el.select;
+    td3.append(btn1)
+    td4.append(btn3)
+    tr.append(td1,td2,td3,td4,td5)
+    tbody.append(tr)
+   
+    })
+   
+  }
+
+addtodo()
+
+  function deletetodo(el){
+    let todos = JSON.parse(localStorage.getItem('todo')) || [];
+    todos.splice(el, 1);
+    localStorage.setItem('todo', JSON.stringify(todos));
+    addtodo()
+  }
+
+</script>

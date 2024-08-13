@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav>
+        <a href="#">Home</a>
+        <a href="./archived.html">Archive</a>
+    </nav>
+    <div id="container">
+        <div>
+            <form  id="form" action="">
+                <input type="text" name="" id="name">
+                <select name="" id="select">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <input type="submit" value="Add todo" id="">
+                </select>
+            </form>
+        </div>
+       
+    </div>
+    
+</body>
+</html>
+<script>
+    let data=[]
+    
+let form=document.getElementById("form");
+form.addEventListener("submit",function(event){
+    event.preventDefault()
+    let name=document.getElementById("name").value;
+    let select=document.getElementById("select").value;
+    let todos = JSON.parse(localStorage.getItem("todo"))||[]
+    todos.push({name,select})
+    localStorage.setItem("todo",JSON.stringify(todos))
+
+})
+
+</script>
