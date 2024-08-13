@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Playlist Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+.input-form {
+    margin-bottom: 20px;
+}
+
+.input-form input {
+    margin-right: 10px;
+    padding: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+th {
+    cursor: pointer;
+    background-color: #f4f4f4;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Music Playlist Manager</h1>
+
+    <div class="input-form">
+        <input type="text" id="songTitle" placeholder="Song Title">
+        <input type="text" id="artist" placeholder="Artist">
+        <input type="text" id="duration" placeholder="Duration (mm:ss)">
+        <input type="text" id="genre" placeholder="Genre">
+        <button onclick="addSong()">Add Song</button>
+    </div>
+
+    <h2>Playlist</h2>
+    <div>
+        <label for="search">Search by Title/Artist:</label>
+        <input type="text" id="search" oninput="searchSongs()" placeholder="Search...">
+        
+        <label for="filter">Filter by Genre:</label>
+        <select id="filter" onchange="filterByGenre()">
+            <option value="all">All</option>
+        </select>
+    </div>
+    
+    <table id="playlistTable">
+        <thead>
+            <tr>
+                <th onclick="sortPlaylist('title')">Title</th>
+                <th onclick="sortPlaylist('artist')">Artist</th>
+                <th onclick="sortPlaylist('duration')">Duration</th>
+                <th onclick="sortPlaylist('genre')">Genre</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="playlistBody">
+            <!-- Playlist songs will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <script src="script.js"></script>
+</body>
+</html>
+<script>
+    let playlist = JSON.parse(localStorage.getItem('playlist')) || [];
+let currentEditIndex = -1;
+
+// Initialize the application
+window.onload = function() {
+    loadPlaylist();
+    populateGenreFilter();
+};
+
+function addSong() {
+    const title = document.getElementById('songTitle').value.trim();
+    const artist = document.getElementById('artist').value.trim();
+    const duration = document.getElementById('duration').value.trim();
+    const genre = document.getElementById('genre').value.trim();
+
+    if (!title || !artist || !duration || !genre) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    const song = { title, artist, duration, genre };
+
+    if (currentEditIndex >= 0) {
+        playlist[currentEditIndex] = song;
+        currentEditIndex = -1;
+    } else {
+        playlist.push(song);
+    }
+
+    savePlaylist();
+    loadPlaylist();
+    resetForm();
+}
+
+function editSong(index) {
+    const song = playlist[index];
+    document.getElementById('songTitle').value = song.title;
+    document.getElementById('artist').value = song.artist;
+    document.getElementById('duration').value = song.duration;
+    document.getElementById('genre').value = song.genre;
+
+    currentEditIndex = index;
+}
+
+function deleteSong(index) {
+    playlist.splice(index, 1);
+    savePlaylist();
+    loadPlaylist();
+}
+
+function loadPlaylist() {
+    const playlistBody = document.getElementById('playlistBody');
+    playlistBody.innerHTML = '';
+
+    playlist.forEach((song, index) => {
+        const row = `<tr>
+            <td>${song.title}</td>
+            <td>${song.artist}</td>
+            <td>${song.duration}</td>
+            <td>${song.genre}</td>
+            <td>
+                <button onclick="editSong(${index})">Edit</button>
+                <button onclick="deleteSong(${index})">Delete</button>
+            </td>
+        </tr>`;
+        playlistBody.innerHTML += row;
+    });
+
+    populateGenreFilter();
+}
+
+function savePlaylist() {
+    localStorage.setItem('playlist', JSON.stringify(playlist));
+}
+
+function resetForm() {
+    document.getElementById('songTitle').value = '';
+    document.getElementById('artist').value = '';
+    document.getElementById('duration').value = '';
+    document.getElementById('genre').value = '';
+}
+
+function sortPlaylist(field) {
+    playlist.sort((a, b) => a[field].localeCompare(b[field]));
+    loadPlaylist();
+}
+
+function searchSongs() {
+    const searchTerm = document.getElementById('search').value.toLowerCase();
+    const filteredSongs = playlist.filter(song =>
+        song.title.toLowerCase().includes(searchTerm) ||
+        song.artist.toLowerCase().includes(searchTerm)
+    );
+    displayFilteredSongs(filteredSongs);
+}
+
+function filterByGenre() {
+    const selectedGenre = document.getElementById('filter').value;
+    const filteredSongs = selectedGenre === 'all' ?
+        playlist :
+        playlist.filter(song => song.genre === selectedGenre);
+    displayFilteredSongs(filteredSongs);
+}
+
+function displayFilteredSongs(filteredSongs) {
+    const playlistBody = document.getElementById('playlistBody');
+    playlistBody.innerHTML = '';
+
+    filteredSongs.forEach((song, index) => {
+        const row = `<tr>
+            <td>${song.title}</td>
+            <td>${song.artist}</td>
+            <td>${song.duration}</td>
+            <td>${song.genre}</td>
+            <td>
+                <button onclick="editSong(${index})">Edit</button>
+                <button onclick="deleteSong(${index})">Delete</button>
+            </td>
+        </tr>`;
+        playlistBody.innerHTML += row;
+    });
+}
+
+function populateGenreFilter() {
+    const filter = document.getElementById('filter');
+    const genres = [...new Set(playlist.map(song => song.genre))];
+
+    filter.innerHTML = '<option value="all">All</option>';
+    genres.forEach(genre => {
+        filter.innerHTML += `<option value="${genre}">${genre}</option>`;
+    });
+}
+
+</script>
